@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'stores';
 import { setGroups } from 'stores/slice/groupSlice';
 import { hideLoading, showLoading } from 'stores/slice/pageSlice';
-
+import { fetchGroups } from '@api/groups';
 
 const Groups: NextPage = () => {
   const router = useRouter()
@@ -25,15 +25,15 @@ const Groups: NextPage = () => {
   const { isAuthenticated } = useAuth()
 
   useEffect(() => {
-    fetchGroups()
+    fetchGroupsData()
   }, [isAuthenticated])
 
-  const fetchGroups = async () => {
+  const fetchGroupsData = async () => {
     if (!isAuthenticated) return
-    const isEmpty = !groups?.length;
+    const isEmpty = !groups?.length
     if (isEmpty) dispatch(showLoading())
-    await new Promise((res) => setTimeout(res, 1000))
-    dispatch(setGroups([123456789, -100000000]))
+    const data = await fetchGroups(100)
+    dispatch(setGroups(data))
     if (isEmpty) dispatch(hideLoading())
   }
 

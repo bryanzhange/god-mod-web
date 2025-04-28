@@ -1,6 +1,12 @@
 'use client';
 
+import { Metadata } from 'next';
 import { ProviderLayout } from './provider'
+
+export const meta: Metadata = {
+  title: 'God Mod',
+  description: 'God Mod',
+}
 
 export default function Layout(props: { children: React.ReactNode }) {
 

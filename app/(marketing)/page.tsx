@@ -16,33 +16,21 @@ import {
   Wrap,
   useClipboard,
 } from '@chakra-ui/react'
-import { Br, Link } from '@saas-ui/react'
-import type { Metadata, NextPage } from 'next'
-import Image from 'next/image'
+import { Br } from '@saas-ui/react'
+import type { NextPage } from 'next'
 import {
   FiArrowRight,
   FiBarChart,
-  FiBox,
-  FiCheck,
   FiClipboard,
   FiClock,
-  FiCode,
   FiCommand,
-  FiCopy,
-  FiFlag,
   FiGrid,
   FiLink,
-  FiLock,
-  FiSearch,
   FiServer,
   FiShield,
   FiSliders,
   FiSmile,
-  FiTerminal,
   FiThumbsUp,
-  FiToggleLeft,
-  FiTrendingUp,
-  FiUserPlus,
   FiUsers,
   FiZap,
 } from 'react-icons/fi'
@@ -66,11 +54,6 @@ import { Em } from '@components/typography'
 import faq from '@data/faq'
 import pricing from '@data/pricing'
 import testimonials from '@data/testimonials'
-
-export const meta: Metadata = {
-  title: 'God Mod Landingspage',
-  description: 'God Mod landingspage starter kit',
-}
 
 const Home: NextPage = () => {
   return (
