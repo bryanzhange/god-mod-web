@@ -24,7 +24,7 @@ import * as React from 'react'
 import { Logo } from '@components/layout/logo'
 import siteConfig from '@data/config'
 import useAuth from '@hooks/useAuth'
-import { FiLock, FiLogOut } from 'react-icons/fi'
+import { FiLogOut, FiUser } from 'react-icons/fi'
 
 interface NavLinkProps extends LinkProps {
   label: string
@@ -149,12 +149,12 @@ export function MobileNavContent(props: MobileNavContentProps) {
 
                 {isAuthenticated && <Stack direction="column">
                   <NavLink
-                    href={'/change-password'}
-                    label="Change password"
+                    href={'/profile'}
+                    label="Profile"
                   >
                     <Stack direction="row" alignItems="center">
-                      <FiLock />
-                      <Text>Change password</Text>
+                      <FiUser />
+                      <Text>Profile</Text>
                     </Stack>
                   </NavLink>
                   <Box px="8" py="3" w="100%">

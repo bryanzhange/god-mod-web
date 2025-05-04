@@ -1,38 +1,23 @@
 import { useRouter } from 'next/navigation'
-import { setUser, setRememberMe, User } from 'stores/slice/authSlice'
+import { setUser } from 'stores/slice/authSlice'
 import { showLoading, hideLoading } from 'stores/slice/pageSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'stores'
-
-const signIn = async (email: string, password: string) => {
-    if (email === 'godmod@gmail.com' && password === '123456') {
-        return { email, password, role: 'admin' }
-    }
-    if (email === 'test@gmail.com' && password === '123456') {
-        return { email, password, role: 'user' }
-    }
-    return null
-}
-
-const signOut = async () => {
-
-}
+import * as authApi from '@/api/auth';
 
 const useAuth = () => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { user } = useSelector((state: RootState) => state.auth);
-    const role = user?.role; // for demo only
     const isAuthenticated = !!user;
 
-    const login = async (email: string, password: string, rememberMe: boolean = false) => {
+    const login = async (user: authApi.TelegramAuthParams) => {
         dispatch(showLoading());
         try {
-            dispatch(setRememberMe(rememberMe));
-            const response = await signIn(email, password);
+            const response = await authApi.login(user);
             if (response) {
                 dispatch(setUser({ ...response }));
-                sessionStorage.setItem('auth_token', JSON.stringify(response)); // for demo only
+                sessionStorage.setItem('auth_token', JSON.stringify(response)); // For demo only - BE should set cookie
             }
             dispatch(hideLoading());
             return !!response;
@@ -47,7 +32,7 @@ const useAuth = () => {
         dispatch(showLoading());
         try {
             sessionStorage.removeItem('auth_token');
-            await signOut();
+            await authApi.signOut();
             router.replace('/');
             dispatch(setUser(null));
             dispatch(hideLoading());
@@ -58,21 +43,17 @@ const useAuth = () => {
         }
     }
 
-    const auth = () => new Promise<User | null>((resolve, reject) => {
-        //fetch('/api/me')
-        const token = sessionStorage.getItem('auth_token');
-        if (token) {
-            dispatch(setUser(JSON.parse(token)))
-        }
-    })
+    const auth = async () => {
+        const user = await authApi.auth()
+        dispatch(setUser(user))
+    }
 
     return {
         login,
         logout,
         auth,
         isAuthenticated,
-        user,
-        role
+        user
     }
 }
 

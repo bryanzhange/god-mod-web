@@ -14,13 +14,19 @@ import ThemeToggle from './theme-toggle'
 import useAuth from '@hooks/useAuth'
 import { ChevronDownIcon } from '@saas-ui/react'
 import { FaUser } from 'react-icons/fa'
-import { FiLock, FiLogOut } from 'react-icons/fi'
+import { FiLogOut, FiUser } from 'react-icons/fi'
 
 
 const Navigation: React.FC = () => {
   const mobileNav = useDisclosure()
   const path = usePathname()
   const { logout, isAuthenticated, user } = useAuth()
+
+  const displayName = user
+    ? user.first_name && user.last_name
+      ? `${user.first_name} ${user.last_name}`
+      : user.first_name || user.last_name || user.username
+    : '';
 
   const onLogout = () => {
     logout()
@@ -81,14 +87,14 @@ const Navigation: React.FC = () => {
         <MenuButton as={Button} rightIcon={<ChevronDownIcon />} display={['none', null, 'flex']}>
           <Stack direction="row" alignItems="center">
             <FaUser />
-            <Box maxW="100px" isTruncated>
-              {user?.email}
-            </Box>
+            {user && <Box maxW="100px" isTruncated>
+              {displayName}
+            </Box>}
           </Stack>
         </MenuButton>
         <MenuList>
-          <MenuItem icon={<FiLock />}>
-            Change password
+          <MenuItem icon={<FiUser />}>
+            Profile
           </MenuItem>
           <MenuItem icon={<FiLogOut />} onClick={onLogout}>
             Logout

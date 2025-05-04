@@ -1,19 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface User {
-    email: string;
-    password: string;
-    role: string; // for demo only
+    id: number;
+    first_name: string;
+    last_name?: string;
+    username?: string;
+    photo_url?: string;
+    role?: string; //for demo only
 }
 
 export type AuthState = {
     user: User | null;
-    rememberMe: boolean;
 }
 
 const initialState: AuthState = {
     user: null,
-    rememberMe: true
 }
 
 export const authSlice = createSlice({
@@ -24,12 +25,9 @@ export const authSlice = createSlice({
     reducers: {
         setUser: (state, action: PayloadAction<User | null>) => {
             state.user = action.payload;
-        },
-        setRememberMe: (state, action: PayloadAction<boolean>) => {
-            state.rememberMe = action.payload;
         }
     }
 })
 
-export const { setUser, setRememberMe } = authSlice.actions;
+export const { setUser } = authSlice.actions;
 export default authSlice.reducer;

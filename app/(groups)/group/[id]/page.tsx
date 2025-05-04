@@ -98,8 +98,8 @@ const Group: NextPage = () => {
               <Button
                 colorScheme="primary"
                 size="lg"
-                maxW="90%"
-                w="300px"
+                maxW="250px"
+                w="100%"
                 marginInline="auto"
                 _hover={{
                   opacity: 0.8

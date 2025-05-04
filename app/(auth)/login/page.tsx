@@ -1,88 +1,73 @@
 'use client';
 
 import useAuth from '@hooks/useAuth';
-import { Center, Stack, useToast } from '@chakra-ui/react'
-import { Auth, AuthParams, AuthProviderProps } from '@saas-ui/auth'
-import { Link } from '@saas-ui/react'
+import { Box, Center, Stack, useToast } from '@chakra-ui/react'
 import { BackgroundGradient } from 'components/gradients/background-gradient'
 import { PageTransition } from 'components/motion/page-transition'
 import { Section } from 'components/section'
 import { NextPage } from 'next'
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { FaGithub, FaGoogle } from 'react-icons/fa'
+import { useEffect, useRef } from 'react';
 import { Logo } from '@components/layout/logo';
+import { TelegramAuthParams } from '@/api/auth';
 
-const providers = {
-  google: {
-    name: 'Google',
-    icon: FaGoogle,
-  },
-  github: {
-    name: 'Github',
-    icon: FaGithub,
-    variant: 'solid',
-  },
-}
-
-const Login: NextPage = (props: AuthProviderProps) => {
+const Login: NextPage = () => {
   const router = useRouter()
   const toast = useToast()
-  const { login, isAuthenticated, user } = useAuth()
+  const { login, isAuthenticated } = useAuth()
+  const btnTelegram = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push(user?.role === 'admin' ? '/settings' : '/groups') // role for demo only
+      router.push('/groups')
     }
   }, [isAuthenticated])
 
-  const handleLogin = async (data: AuthParams) => {
-    const result = await login(data.email as string, data.password as string);
-    if (!result) {
-      showErrorToast();
+  const onTelegramAuth = async (user: TelegramAuthParams) => {
+    console.log('user', user)
+    await login(user);
+  }
+
+  const initTelegramLogin = (botName: string) => {
+    const script = document.createElement("script");
+    script.src = "https://telegram.org/js/telegram-widget.js?22";
+    script.async = true;
+    script.setAttribute("data-telegram-login", botName);
+    script.setAttribute("data-size", "large");
+    script.setAttribute("data-onauth", "onTelegramAuth(user)");
+    script.setAttribute("data-request-access", "write");
+    btnTelegram.current?.appendChild(script);
+  }
+
+  useEffect(() => {
+    (window as any).onTelegramAuth = onTelegramAuth;
+    const botName = process.env.NEXT_PUBLIC_BOT_NAME;
+    if (!botName) {
+      toast({
+        title: 'Missing bot name',
+        description: 'Please configure your bot name in the environment variables',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top'
+      })
+      if (btnTelegram.current) btnTelegram.current.style.display = 'none';
+      return;
     }
-  }
-
-  const handleForgotPassword = async (data: AuthParams) => {
-    console.log('email', data.email)
-  }
-
-  const handleSuccess = async (view: string, data: AuthParams) => {
-    switch(view) {
-      case 'login':
-        await handleLogin(data)
-        break
-      case 'forgot_password':
-        await handleForgotPassword(data);
-        break
-    }
-  }
-
-  const showErrorToast = () => {
-    toast({
-      title: 'Login Failed',
-      description: 'Your email or password is incorrect!',
-      status: 'error',
-      duration: 5000,
-      isClosable: true,
-      position: 'top'
-    })
-  }
+    initTelegramLogin(botName);
+  }, [])
 
   return (
-    <Section height="calc(100vh - 200px)" innerWidth="container.sm">
+    <Section innerWidth="container.sm">
       <BackgroundGradient zIndex="-1" />
-      <Center height="100%" pt="20">
+      <Center height="100%">
         <PageTransition width="100%">
-          <Stack direction="row" justifyContent="center" marginBottom={8}>
+          <Stack direction="row" justifyContent="center" marginBottom="5rem">
             <Logo />
           </Stack>
-          <Auth
-            type="password"
-            // providers={providers}
-            signupLink={<Link href="/signup">Sign up</Link>}
-            onSuccess={handleSuccess}
-          />
+          <Stack direction="row" justifyContent="center">
+            <Box as="div" ref={btnTelegram} />
+          </Stack>
         </PageTransition>
       </Center>
     </Section>
