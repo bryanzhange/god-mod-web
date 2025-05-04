@@ -3,7 +3,7 @@ import { setUser } from 'stores/slice/authSlice'
 import { showLoading, hideLoading } from 'stores/slice/pageSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'stores'
-import * as authApi from '@/api/auth';
+import * as authApi from '@/api/auth'
 
 const useAuth = () => {
     const router = useRouter();

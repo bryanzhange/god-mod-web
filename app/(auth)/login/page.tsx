@@ -10,10 +10,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { Logo } from '@components/layout/logo';
 import { TelegramAuthParams } from '@/api/auth';
+import { useDispatch } from 'react-redux';
+import { hideLoading, showLoading } from '@/stores/slice/pageSlice';
 
 const Login: NextPage = () => {
   const router = useRouter()
   const toast = useToast()
+  const dispatch = useDispatch()
   const { login, isAuthenticated } = useAuth()
   const btnTelegram = useRef<HTMLDivElement>(null)
 
@@ -37,6 +40,20 @@ const Login: NextPage = () => {
     script.setAttribute("data-onauth", "onTelegramAuth(user)");
     script.setAttribute("data-request-access", "write");
     btnTelegram.current?.appendChild(script);
+    if (btnTelegram.current) {
+      dispatch(showLoading())
+      const observer = new MutationObserver((mutationsList, observer) => {
+        for (const mutation of mutationsList) {
+          for (const node of mutation.addedNodes) {
+            if (node.nodeName === 'IFRAME' && (node as HTMLIFrameElement).src.includes('telegram.org')) {
+              dispatch(hideLoading())
+              observer.disconnect()
+            }
+          }
+        }
+      })
+      observer.observe(btnTelegram.current, { childList: true, subtree: true })
+    }
   }
 
   useEffect(() => {

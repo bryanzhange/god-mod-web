@@ -1,7 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export interface TelegramGroup {
+    id: number;
+    chatId: string;
+    chatTitle: string;
+    chatType: number;
+    avatar?: string;
+    userId: string;
+    isAdmin: boolean;
+    isSuperGroup: boolean;
+    createdDate: string;      // ISO date string
+    createdUser?: string;
+    updatedDate: string;      // ISO date string
+    updatedUser?: string;
+    deletedDate?: string;
+    deletedUser?: string;
+}
+
 type GroupState = {
-    groups: number[]
+    groups: TelegramGroup[]
 }
 
 const initialState: GroupState = {
@@ -14,7 +31,7 @@ export const groupSlice = createSlice({
         return initialState
     },
     reducers: {
-        setGroups: (state, action: PayloadAction<number[] | null>) => {
+        setGroups: (state, action: PayloadAction<TelegramGroup[]>) => {
             state.groups = action.payload ?? []
         },
         clearGroups: (state) => {

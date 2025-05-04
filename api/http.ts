@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const HTTP = axios.create({
-    withCredentials: true,
+    // withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
     },

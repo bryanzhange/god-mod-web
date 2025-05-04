@@ -1,19 +1,9 @@
+import { TelegramGroup } from '@/stores/slice/groupSlice';
 import HTTP from '../http';
 
-const fetchGroups = (userId: number): Promise<any> => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      await new Promise((res) => setTimeout(res, 1000))
-      resolve([123456789, -100000000])
-      // HTTP.get(`/groups/${userId}`).then(response => {
-      //   resolve(response.data);
-      // }).catch(error => {
-      //   reject(error);
-      // });
-    } catch (error) {
-      reject(error);
-    }
-  })
+const fetchGroups = async (userId: number): Promise<TelegramGroup[]> => {
+  const response = await HTTP.get(`/groups/${userId}`);
+  return response.data;
 }
 
 export {

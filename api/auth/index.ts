@@ -10,7 +10,9 @@ export interface TelegramAuthParams {
   hash: string;
 }
 
-const login = (user: TelegramAuthParams): Promise<any> => {
+const login = async (user: TelegramAuthParams): Promise<any> => {
+  // const response = await HTTP.post('/login/', user)
+  // return response.data;
   return new Promise((resolve, reject) => {
     try {
       resolve(user);
