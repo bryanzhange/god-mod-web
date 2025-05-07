@@ -1,16 +1,21 @@
 # Install packages
 ```sh
-npm i
+docker-compose up install
 ```
 
-# Start the application
+# Start the application for dev
 ```sh
-npm run dev
+docker-compose up dev
 ```
 
 # Build the application for production
 ```sh
-npm run build
+docker-compose up build
+```
+
+# Start the application for production
+```sh
+docker-compose up start
 ```
 
 # Telegram Login Integration

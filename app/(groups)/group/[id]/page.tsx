@@ -51,6 +51,8 @@ const Group: NextPage = () => {
   useEffect(() => {
     if (id) {
       console.log('Config ID:', id);
+    } else {
+      router.replace('/groups')
     }
   }, [id]);
 
