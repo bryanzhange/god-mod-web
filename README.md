@@ -5,7 +5,7 @@ docker-compose up install
 
 # Start the application for dev
 ```sh
-docker-compose up dev
+npm run dev
 ```
 
 # Build the application for production
